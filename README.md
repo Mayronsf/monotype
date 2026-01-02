@@ -64,11 +64,19 @@ O servidor irá servir tanto a API quanto os arquivos estáticos do frontend.
 Crie um arquivo `.env` na raiz do projeto:
 
 ```env
-VITE_API_URL=http://localhost:3001/api
+SUPABASE_URL=https://seu-projeto.supabase.co
+SUPABASE_ANON_KEY=sua-chave-anon-public-key-aqui
 PORT=3001
+NODE_ENV=development
+VITE_API_URL=http://localhost:3001/api
 ```
 
-Para produção, ajuste `VITE_API_URL` para a URL do seu servidor.
+**Para obter as credenciais do Supabase:**
+1. Acesse https://supabase.com e crie um projeto
+2. Vá em Settings → API
+3. Copie a Project URL e anon public key
+
+Para produção, configure as mesmas variáveis na plataforma de deploy (Railway/Render).
 
 ### Deploy em Serviços de Hospedagem
 
@@ -76,8 +84,11 @@ Para produção, ajuste `VITE_API_URL` para a URL do seu servidor.
 
 1. **Backend (Railway/Render):**
    - Faça deploy do servidor (`server/index.js`)
-   - Configure a variável `PORT` (geralmente fornecida automaticamente)
-   - O arquivo `server/data/championship.json` será criado automaticamente
+   - Configure as variáveis de ambiente:
+     - `SUPABASE_URL` - URL do seu projeto Supabase
+     - `SUPABASE_ANON_KEY` - Chave anon do Supabase
+     - `PORT` (geralmente fornecida automaticamente)
+     - `NODE_ENV=production`
 
 2. **Frontend (Vercel/Netlify):**
    - Configure a variável `VITE_API_URL` com a URL do seu backend
@@ -139,9 +150,10 @@ Todos os dados são armazenados no servidor e compartilhados entre todos os usu�
 
 ## 🎯 Como Funciona
 
-1. **Dados Centralizados:** Todos os dados são salvos no servidor em `server/data/championship.json`
+1. **Dados Centralizados:** Todos os dados são salvos no Supabase (banco PostgreSQL em nuvem)
 2. **Sincronização:** O frontend atualiza automaticamente a cada 5 segundos
 3. **Edições em Tempo Real:** Qualquer usuário pode editar e todos veem as mudanças
+4. **Persistência:** Os dados são armazenados permanentemente no banco de dados
 
 ## 🐛 Troubleshooting
 
@@ -154,7 +166,9 @@ Todos os dados são armazenados no servidor e compartilhados entre todos os usu�
 ### Dados não aparecem
 
 - Verifique o console do navegador para erros
-- Verifique se o arquivo `server/data/championship.json` existe
+- Verifique se as variáveis de ambiente do Supabase estão configuradas corretamente
+- Verifique se as tabelas foram criadas no Supabase (execute `supabase/schema.sql`)
+- Teste a conexão com: `npm run test:supabase`
 - Tente resetar os dados usando o endpoint `/api/reset`
 
 ## 📝 Licença

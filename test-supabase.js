@@ -1,21 +1,25 @@
 // Script para testar conexão com Supabase
 import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
 import { readFileSync } from 'fs';
 
-// Carregar variáveis de ambiente
+// Carregar variáveis de ambiente do arquivo .env
 try {
   const envContent = readFileSync('.env', 'utf-8');
   envContent.split('\n').forEach(line => {
-    if (line.trim() && !line.startsWith('#')) {
-      const [key, ...valueParts] = line.split('=');
-      if (key && valueParts.length > 0) {
-        process.env[key.trim()] = valueParts.join('=').trim();
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const equalIndex = trimmed.indexOf('=');
+      if (equalIndex > 0) {
+        const key = trimmed.substring(0, equalIndex).trim();
+        const value = trimmed.substring(equalIndex + 1).trim();
+        if (key && value) {
+          process.env[key] = value;
+        }
       }
     }
   });
 } catch (error) {
-  console.log('Arquivo .env não encontrado, usando variáveis do sistema');
+  console.log('⚠️  Arquivo .env não encontrado, usando variáveis do sistema');
 }
 
 const supabaseUrl = process.env.SUPABASE_URL;

@@ -31,6 +31,7 @@ server/data/championship.json
 .env
 .env.local
 .env.production
+CRIAR_ENV.txt
 
 # Editor directories and files
 .vscode/*
