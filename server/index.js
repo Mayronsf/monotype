@@ -238,7 +238,7 @@ app.post('/api/results', async (req, res) => {
       // Criar standing se não existir
       const player = [...players.groupA, ...players.groupB].find(p => p.id === winnerId);
       if (player) {
-        await updateStanding(winnerId, groupIdUpper, {
+        await upsertStanding({
           player_id: winnerId,
           group_id: groupIdUpper,
           name: player.name,
@@ -264,7 +264,7 @@ app.post('/api/results', async (req, res) => {
       // Criar standing se não existir
       const player = [...players.groupA, ...players.groupB].find(p => p.id === loserId);
       if (player) {
-        await updateStanding(loserId, groupIdUpper, {
+        await upsertStanding({
           player_id: loserId,
           group_id: groupIdUpper,
           name: player.name,
