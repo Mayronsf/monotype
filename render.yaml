@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: championship
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    disk:
+      name: championship-data
+      mountPath: /app/server/data
+      sizeGB: 1
+
