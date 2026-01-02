@@ -1,0 +1,11 @@
+# Copie este conteúdo e crie um arquivo .env na raiz do projeto
+
+SUPABASE_URL=https://kmuvrxtsxjibdokdumbm.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttdXZyeHRzeGppYmRva2R1bWJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjM3MTgsImV4cCI6MjA4MjkzOTcxOH0.NiJlgflaoCXrVIOsvTITeltB25MQLcxiYEX_IP1eA_k
+
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttdXZyeHRzeGppYmRva2R1bWJtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NzM2MzcxOCwiZXhwIjoyMDgyOTM5NzE4fQ.N3Y25eP5NbVFz1yHqvDAKGzXCdWPxYlWzvelUvy2juI
+
+PORT=3001
+NODE_ENV=development
+VITE_API_URL=http://localhost:3001/api
+

@@ -27,6 +27,11 @@ lerna-debug.log*
 # Server data
 server/data/championship.json
 
+# Environment variables
+.env
+.env.local
+.env.production
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
