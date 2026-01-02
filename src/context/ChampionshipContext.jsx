@@ -194,7 +194,10 @@ export const ChampionshipProvider = ({ children }) => {
         body: JSON.stringify({ groupId, round, matchIndex, winnerId, loserId, pokemonDiff }),
       });
       
-      if (!response.ok) throw new Error('Erro ao salvar resultado');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || `Erro ao salvar resultado (${response.status})`);
+      }
       
       const result = await response.json();
       setData({
@@ -203,9 +206,12 @@ export const ChampionshipProvider = ({ children }) => {
         bracketResults: cleanBracketResults(result.data.bracketResults),
         metadata: result.data.metadata || { totalMatches: 0, totalBracketMatches: 0 },
       });
+      setError(null);
     } catch (error) {
       console.error('Error updating result:', error);
-      setError(error.message);
+      const errorMessage = error.message || 'Erro ao salvar resultado. Verifique se o servidor está rodando.';
+      setError(errorMessage);
+      throw error; // Re-throw para o componente poder tratar
     }
   };
 
@@ -251,7 +257,10 @@ export const ChampionshipProvider = ({ children }) => {
         body: JSON.stringify({ matchId, winnerId, loserId, pokemonDiff, player1Id, player2Id }),
       });
       
-      if (!response.ok) throw new Error('Erro ao salvar resultado do mata-mata');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || `Erro ao salvar resultado do mata-mata (${response.status})`);
+      }
       
       const result = await response.json();
       setData({
@@ -260,9 +269,12 @@ export const ChampionshipProvider = ({ children }) => {
         bracketResults: cleanBracketResults(result.data.bracketResults),
         metadata: result.data.metadata || { totalMatches: 0, totalBracketMatches: 0 },
       });
+      setError(null);
     } catch (error) {
       console.error('Error updating bracket result:', error);
-      setError(error.message);
+      const errorMessage = error.message || 'Erro ao salvar resultado. Verifique se o servidor está rodando.';
+      setError(errorMessage);
+      throw error; // Re-throw para o componente poder tratar
     }
   };
 

@@ -3,13 +3,15 @@ import { useChampionship } from '../context/ChampionshipContext';
 import TypeBadge from './TypeBadge';
 
 export default function MatchResult({ groupId, round, matchIndex, player1, player2 }) {
-  const { updateResult, removeResult, getResult } = useChampionship();
+  const { updateResult, removeResult, getResult, error } = useChampionship();
   const [pokemonDiff, setPokemonDiff] = useState('');
   const [winner, setWinner] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
   
   const existingResult = getResult(groupId, round, matchIndex);
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!winner || !pokemonDiff) return;
     
@@ -22,9 +24,20 @@ export default function MatchResult({ groupId, round, matchIndex, player1, playe
     const winnerId = winner === 'player1' ? player1.id : player2.id;
     const loserId = winner === 'player1' ? player2.id : player1.id;
     
-    updateResult(groupId, round, matchIndex, winnerId, loserId, diff);
-    setWinner(null);
-    setPokemonDiff('');
+    setIsSaving(true);
+    setSaveError(null);
+    
+    try {
+      await updateResult(groupId, round, matchIndex, winnerId, loserId, diff);
+      // Só reseta se não houver erro
+      setWinner(null);
+      setPokemonDiff('');
+    } catch (err) {
+      setSaveError(err.message || 'Erro ao salvar resultado. Verifique se o servidor está rodando.');
+      console.error('Erro ao salvar:', err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleEdit = () => {
@@ -169,12 +182,25 @@ export default function MatchResult({ groupId, round, matchIndex, player1, playe
             />
           </div>
           
+          {saveError && (
+            <div className="bg-red-100 border-2 border-red-400 text-red-700 px-3 py-2 rounded-lg text-sm">
+              ⚠️ {saveError}
+            </div>
+          )}
+          
           <button
             type="submit"
-            disabled={!winner || !pokemonDiff}
-            className="w-full py-2 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            disabled={!winner || !pokemonDiff || isSaving}
+            className="w-full py-2 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
-            Salvar Resultado
+            {isSaving ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                Salvando...
+              </>
+            ) : (
+              'Salvar Resultado'
+            )}
           </button>
         </form>
       )}
